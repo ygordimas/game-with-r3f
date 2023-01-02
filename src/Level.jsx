@@ -10,6 +10,7 @@ import { useRef, useEffect, useMemo } from "react";
 import { AxeObstacle } from "./components/AxeObstacle";
 import { BlockEnd } from "./components/BlockEnd";
 import { Hamburger } from "./components/Hamburger";
+import { Bounds } from "./components/Bounds";
 
 THREE.ColorManagement.legacyMode = false;
 
@@ -53,6 +54,7 @@ export default function Level({
         <BlockType key={index} position={[0, 0, -(index + 1) * 4]} />
       ))}
       <BlockEnd position={[0, 0, -(count + 1) * 4]} />
+      <Bounds length={count + 2} />
     </>
   );
 }

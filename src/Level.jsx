@@ -2,36 +2,40 @@ import * as THREE from "three";
 import { BlockSpinner } from "./components/BlockSpinner";
 import { BlockStart } from "./components/BlockStart";
 import { BlockLimbo } from "./components/BlockLimbo";
-
-import { LimboObstacle } from "./components/LimboObstacle";
 import { BlockAxe } from "./components/BlockAxe";
-import { Block } from "./components/Block";
-import { useRef, useEffect, useMemo } from "react";
-import { AxeObstacle } from "./components/AxeObstacle";
+import { useMemo } from "react";
 import { BlockEnd } from "./components/BlockEnd";
-import { Hamburger } from "./components/Hamburger";
 import { Bounds } from "./components/Bounds";
+import { Float, Text, useGLTF } from "@react-three/drei";
 
 THREE.ColorManagement.legacyMode = false;
-
 export const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 
 export const floor1Material = new THREE.MeshStandardMaterial({
-  color: "limegreen",
+  color: "#111111",
+  metalness: 0,
+  roughness: 0,
 });
 export const floor2Material = new THREE.MeshStandardMaterial({
-  color: "greenyellow",
+  color: "#222222",
+  metalness: 0,
+  roughness: 0,
 });
 export const obstacleMaterial = new THREE.MeshStandardMaterial({
-  color: "orangered",
+  color: "#ff0000",
+  metalness: 0,
+  roughness: 1,
 });
 export const wallMaterial = new THREE.MeshStandardMaterial({
-  color: "slategrey",
+  color: "#887777",
+  metalness: 0,
+  roughness: 0,
 });
 
 export default function Level({
   count = 5,
   types = [BlockAxe, BlockLimbo, BlockSpinner],
+  seed = 0,
 }) {
   const blocks = useMemo(() => {
     const blocks = [];
@@ -41,11 +45,7 @@ export default function Level({
       blocks.push(type);
     }
     return blocks;
-  }, [count, types]);
-
-  useEffect(() => {
-    console.log(blocks);
-  }, []);
+  }, [count, types, seed]);
 
   return (
     <>

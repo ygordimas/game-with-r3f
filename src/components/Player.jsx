@@ -3,6 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { useKeyboardControls } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
+import useGame from "../stores/useGame";
 
 export function Player() {
   //*** retrieve world data from rapier */
@@ -28,7 +29,25 @@ export function Player() {
     if (hit.toi < 0.15) body.current.applyImpulse({ x: 0, y: 0.5, z: 0 });
   };
 
+  const start = useGame((state) => state.start);
+  const end = useGame((state) => state.end);
+  const restart = useGame((state) => state.restart);
+  const blocksCount = useGame((state) => state.blocksCount);
+
+  const reset = () => {
+    body.current.setTranslation({ x: 0, y: 1, z: 0 });
+    body.current.setLinvel({ x: 0, y: 0, z: 0 });
+    body.current.setAngvel({ x: 0, y: 0, z: 0 });
+  };
+
   useEffect(() => {
+    const unsubscribeReset = useGame.subscribe(
+      (state) => state.phase,
+      (value) => {
+        if (value === "ready") reset();
+      }
+    );
+
     const unsubscribeJump = subscribeWithSelector(
       (state) => state.jump,
       (value) => {
@@ -38,8 +57,14 @@ export function Player() {
       }
     );
 
+    const unsubscribeAny = subscribeWithSelector(() => {
+      start();
+    });
+
     return () => {
       unsubscribeJump();
+      unsubscribeAny();
+      unsubscribeReset();
     };
   }, []);
 
@@ -85,7 +110,9 @@ export function Player() {
     smoothedCameraTarget.lerp(cameraTarget, 5 * delta);
     state.camera.position.copy(smoothedCameraPosition);
     state.camera.lookAt(smoothedCameraTarget);
-    console.log(bodyPosition);
+
+    if (bodyPosition.z < -(blocksCount * 4 + 2)) end();
+    if (bodyPosition.y < -4) restart();
   });
 
   return (

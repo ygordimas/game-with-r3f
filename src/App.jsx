@@ -4,6 +4,7 @@ import Lights from "./components/Lights.jsx";
 import { OrbitControls } from "@react-three/drei";
 import Level from "./Level.jsx";
 import { Physics, Debug } from "@react-three/rapier";
+import { Player } from "./components/Player.jsx";
 
 function App() {
   return (
@@ -17,12 +18,13 @@ function App() {
           position: [2.5, 4, 6],
         }}
       >
-        <OrbitControls makeDefault />
+        {/* <OrbitControls makeDefault /> */}
         <Suspense>
           <Physics>
-            <Debug />
+            {/* <Debug /> */}
             <Lights />
             <Level />
+            <Player />
           </Physics>
         </Suspense>
       </Canvas>
